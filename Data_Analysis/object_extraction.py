@@ -1,7 +1,7 @@
 import json
 
 # Opening JSON file
-f = open('./data/gold_release.json')
+f = open('../data/gold_release.json')
 
 # returns JSON object as a dictionary
 data = json.load(f)
@@ -14,6 +14,9 @@ terms = {}
 exception_states = []
 non_object_tails = []
 non_object_heads = []
+
+# contains the MWOs that only describe the work done on assets, not the state of?
+exception=[]
 
 # Extract relevant data from the dataset
 for d in data:
@@ -32,6 +35,7 @@ for d in data:
                     state_words = " ".join(d['tokens'][start:end])
                 non_object_heads.append(state_words)
                 non_object_tails.append(d['entities'][tail]['type'])
+                exception.append(d["text"])
                 continue
             # removing relations where the head is not a State entity
             if d['entities'][head]['type'].split("/")[0] not in heads:
@@ -43,6 +47,7 @@ for d in data:
                     state_words = " ".join(d['tokens'][start:end])
                 non_object_heads.append(state_words)
                 # non_object_tails.append(d['entities'][tail]['type'])
+                exception.append(d["text"])
                 continue
             # if the tail is only labelled PhysicalObject with no functional property 
             if len(d['entities'][tail]['type'].split("/")) < 2:
@@ -86,6 +91,7 @@ for d in data:
                     state_words = " ".join(d['tokens'][start:end])
                 non_object_heads.append(state_words)
                 non_object_tails.append(d['entities'][tail]['type'])
+                exception.append(d["text"])
                 continue
             if d['entities'][head]['type'].split("/")[0] not in heads:
                 start = d['entities'][head]['start']
@@ -96,9 +102,12 @@ for d in data:
                     state_words = " ".join(d['tokens'][start:end])
                 non_object_heads.append(state_words)
                 # non_object_tails.append(d['entities'][tail]['type'])
+                exception.append(d["text"])
                 continue
+            
             if len(d['entities'][tail]['type'].split("/")) < 2:
                 exception_states.append((d,d['entities'][tail]['type']))
+                exception.append(d["text"])
                 continue
             state_type = d['entities'][tail]['type'].split("/")[1]
             start = d['entities'][head]['start']
@@ -124,8 +133,26 @@ for d in data:
             else: 
                 terms[state_words] = [object_words]
 
+print(exception)
+print() 
+print("#####################")
+print()
+NoHasParticipant =[]
+NoState= []
+for d in data:
+    typesRelation = [r["type"] for r in  d["relations"]]
+    if "hasParticipant/hasPatient" not in typesRelation and "hasParticipant/hasAgent" not in typesRelation:
+        NoHasParticipant.append(d["text"])
+        typesEntity = [r["type"].split("/")[0] for r in  d["entities"]]
+        if "State" in typesEntity or "Process" in typesEntity or "Property" in typesEntity:
+            NoState.append(d["text"])
+for i in NoHasParticipant:
+    print(i)
 
+print("\n###########\n")
 
+for i in NoState:
+    print(i)
 ######################################
 
 print("Select the experiment to run below: ")
@@ -184,6 +211,12 @@ elif experiment=="2b":
 
     for i in sorted_state_term_count:
         print(i[0], len(i[1]))
+    
+    x = input("see function-term pairs? (y/n):")
+    if x == "y":
+        for i in sorted_state_term_count:
+            functions = ", ".join(i[1])
+            print(i[0], ":",functions)
 
 elif experiment =="3":
     state_terms_count = {}
