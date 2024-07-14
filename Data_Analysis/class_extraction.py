@@ -24,14 +24,14 @@ def extractProperty(filename, searchtype):
 if __name__ == "__main__":
     searchType = input("Enter the class of data you want to extract in Maintie gold & silver (Process/ Property/ PhysicalObject/ State): ")
     searchType = searchType.lower().strip().capitalize()
-    gold_process = extractProperty("../data/gold_release.json", searchType)
-    silver_process = extractProperty("../data/silver_release.json", searchType)
+    gold_text = extractProperty("../data/gold_release.json", searchType)
+    silver_text = extractProperty("../data/silver_release.json", searchType)
 
     print()
-    print("Gold Process: ")
-    for i in gold_process:
+    print("Gold",searchType,": ")
+    for i in gold_text:
         print(i)
     print()
-    print("Silver Process: ")
-    for i in silver_process:
+    print("Silver",searchType,": ")
+    for i in silver_text:
         print(i)
