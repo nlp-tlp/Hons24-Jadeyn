@@ -8,7 +8,7 @@ def pad_sequence(dataset):
     return dataset
 
 def clean_tokens(tokens):
-    stopwords =["<num>", "<id>"]
+    stopwords =["<num>", "<id>", "-"]
     tokens = [i for i in tokens if i not in stopwords]
     tokens = contractions.fix(" ".join(tokens)).split()
     return tokens

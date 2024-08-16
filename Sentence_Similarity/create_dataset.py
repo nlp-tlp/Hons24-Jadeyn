@@ -8,7 +8,7 @@ def pad_sequence(dataset):
     return dataset
 
 def clean_tokens(tokens):
-    stopwords =["<num>", "<id>"]
+    stopwords =["<num>", "<id>", "-"]
     tokens = [i for i in tokens if i not in stopwords]
     tokens = contractions.fix(" ".join(tokens)).split()
     return tokens
@@ -55,5 +55,6 @@ def full_dataset(filename):
 
 
 if __name__ == "__main__":
-    dataset = prepare_dataset("../data/gold_release.json")
+    # dataset = prepare_dataset("../data/gold_release.json")
+    dataset = full_dataset("../data/gold_release.json")
     print("Dataset: ", dataset)
