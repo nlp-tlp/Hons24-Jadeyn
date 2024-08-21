@@ -17,8 +17,15 @@ def storeData(filename):
 
                 # add to dictionary
                 if text not in PhysicalObjectValid.keys():
-                    PhysicalObjectValid[text] = [entity["type"]]
+                    if len(entity["type"].split("/")) > 1: 
+                        type = "/".join(entity["type"].split("/")[0:2])
+                        PhysicalObjectValid[text] = [type]
+                    else:
+                        PhysicalObjectValid[text] = [entity["type"]]
                 elif entity["type"] not in PhysicalObjectValid[text]:
+                    if len(entity["type"].split("/")) > 1: 
+                        type = "/".join(entity["type"].split("/")[0:2])
+                        PhysicalObjectValid[text].append(type)
                     PhysicalObjectValid[text].append(entity["type"])
     f.close()
     return PhysicalObjectValid
@@ -55,4 +62,4 @@ def check_predictions(gold_entities, filename):
 
 if __name__ == "__main__":
     gold_entities = storeData("../data/gold_release.json")
-    check_predictions(gold_entities, "data/predictions.json")
+    check_predictions(gold_entities, "data/predictions_2.json")
