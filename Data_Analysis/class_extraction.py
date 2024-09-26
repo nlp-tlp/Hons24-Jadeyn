@@ -28,10 +28,10 @@ if __name__ == "__main__":
     silver_text = extractProperty("../data/silver_release.json", searchType)
 
     print()
-    print("Gold",searchType,": ")
+    print("Gold",searchType,": ===========================")
     for i in gold_text:
         print(i)
     print()
-    print("Silver",searchType,": ")
+    print("Silver",searchType,": ===========================")
     for i in silver_text:
         print(i)
